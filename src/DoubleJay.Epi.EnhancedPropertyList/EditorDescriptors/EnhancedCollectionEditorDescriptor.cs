@@ -7,6 +7,7 @@ using EPiServer;
 using EPiServer.Cms.Shell.UI.ObjectEditing.EditorDescriptors;
 using EPiServer.Core;
 using EPiServer.Logging;
+using EPiServer.ServiceLocation;
 using EPiServer.Shell.ObjectEditing;
 using EPiServer.Web;
 using EPiServer.Web.Routing;
@@ -15,6 +16,8 @@ namespace DoubleJay.Epi.EnhancedPropertyList.EditorDescriptors
 {
     public class EnhancedCollectionEditorDescriptor<T> : CollectionEditorDescriptor<T> where T : new()
     {
+        private readonly Injected<IUrlResolver> _urlResolver = default(Injected<IUrlResolver>);
+
         private static readonly ILogger Logger = LogManager.GetLogger(typeof(EnhancedCollectionEditorDescriptor<T>));
 
         public override void ModifyMetadata(ExtendedMetadata metadata, IEnumerable<Attribute> attributes)
@@ -97,11 +100,11 @@ namespace DoubleJay.Epi.EnhancedPropertyList.EditorDescriptors
                     {
                         if (!urls.ContainsKey(url.ToString()))
                         {
-                            urls.Add(url.ToString(), UrlResolver.Current.GetUrl(new UrlBuilder(url), ContextMode.Default));
+                            urls.Add(url.ToString(), _urlResolver.Service.GetUrl(new UrlBuilder(url), ContextMode.Default));
                         }
                     }
 
-                    var contentLink = GetPropertyValue<ContentReference>(property, item);
+                    ContentReference contentLink = GetPropertyValue<ContentReference>(property, item);
 
                     if (ContentReference.IsNullOrEmpty(contentLink))
                     {
@@ -110,7 +113,7 @@ namespace DoubleJay.Epi.EnhancedPropertyList.EditorDescriptors
 
                     if (!urls.ContainsKey(contentLink.ID.ToString()))
                     {
-                        urls.Add(contentLink.ID.ToString(), UrlResolver.Current.GetUrl(contentLink));
+                        urls.Add(contentLink.ID.ToString(), _urlResolver.Service.GetUrl(contentLink));
                     }
                 }
             }
