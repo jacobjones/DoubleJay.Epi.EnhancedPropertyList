@@ -33,7 +33,7 @@ namespace DoubleJay.Epi.EnhancedPropertyList.EditorDescriptors
             metadata.EditorConfiguration.Add("fields", GetFieldInfo(metadata));
             metadata.EditorConfiguration.Add("itemMappings", GetItemMappings(metadata));
 
-            metadata.ClientEditingClass = "alloy/EnhancedCollectionEditor";
+            metadata.ClientEditingClass = "enhancedpropertylist/EnhancedCollectionEditor";
         }
 
         /// <summary>
