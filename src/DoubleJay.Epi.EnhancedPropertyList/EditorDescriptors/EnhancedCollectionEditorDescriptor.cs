@@ -6,6 +6,7 @@ using System.Reflection;
 using EPiServer;
 using EPiServer.Cms.Shell.UI.ObjectEditing.EditorDescriptors;
 using EPiServer.Core;
+using EPiServer.Globalization;
 using EPiServer.Logging;
 using EPiServer.ServiceLocation;
 using EPiServer.Shell.ObjectEditing;
@@ -14,9 +15,14 @@ using EPiServer.Web.Routing;
 
 namespace DoubleJay.Epi.EnhancedPropertyList.EditorDescriptors
 {
+    /// <summary>
+    /// A <see cref="CollectionEditorDescriptor{T}" /> with improved presentation of ContentReference and Url properties. 
+    /// </summary>
+    /// <typeparam name="T">The item type</typeparam>
     public class EnhancedCollectionEditorDescriptor<T> : CollectionEditorDescriptor<T> where T : new()
     {
         private readonly Injected<IUrlResolver> _urlResolver = default(Injected<IUrlResolver>);
+        private readonly Injected<IContentLoader> _contentLoader = default(Injected<IContentLoader>);
 
         private static readonly ILogger Logger = LogManager.GetLogger(typeof(EnhancedCollectionEditorDescriptor<T>));
 
@@ -25,9 +31,9 @@ namespace DoubleJay.Epi.EnhancedPropertyList.EditorDescriptors
             base.ModifyMetadata(metadata, attributes);
 
             metadata.EditorConfiguration.Add("fields", GetFieldInfo(metadata));
-            metadata.EditorConfiguration.Add("urlMappings", GetUrlMappings(metadata));
+            metadata.EditorConfiguration.Add("itemMappings", GetItemMappings(metadata));
 
-            metadata.ClientEditingClass = "enhancedpropertylist/EnhancedCollectionEditor";
+            metadata.ClientEditingClass = "alloy/EnhancedCollectionEditor";
         }
 
         /// <summary>
@@ -73,19 +79,20 @@ namespace DoubleJay.Epi.EnhancedPropertyList.EditorDescriptors
         }
 
         /// <summary>
-        /// Get a mapping of ContentReferences and URLs to friendly URLs.
+        /// Get a mapping of ContentReferences and URLs to names and friendly URLs.
         /// </summary>
         /// <param name="metadata">The extended metadata.</param>
         /// <returns>Mappings dictionary.</returns>
-        protected virtual IDictionary<string, string> GetUrlMappings(ExtendedMetadata metadata)
+        protected virtual IDictionary<string, ListItem> GetItemMappings(ExtendedMetadata metadata)
         {
-            IDictionary<string, string> urls = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            // Mappings of list items that are a ContentReference or URL
+            IDictionary<string, ListItem> listItems = new Dictionary<string, ListItem>(StringComparer.OrdinalIgnoreCase);
 
             var model = metadata.Model as dynamic;
 
             if (model?.List == null)
             {
-                return urls;
+                return listItems;
             }
 
             foreach (var item in model.List)
@@ -98,9 +105,25 @@ namespace DoubleJay.Epi.EnhancedPropertyList.EditorDescriptors
 
                     if (url != null && !url.IsEmpty())
                     {
-                        if (!urls.ContainsKey(url.ToString()))
+                        if (!listItems.ContainsKey(url.ToString()))
                         {
-                            urls.Add(url.ToString(), _urlResolver.Service.GetUrl(new UrlBuilder(url), ContextMode.Default));
+                            var content = _urlResolver.Service.Route(new UrlBuilder(url), ContextMode.Default);
+
+                            ListItem listItem;
+
+                            if (content == null)
+                            {
+                                listItem = new ListItem(url.ToString());
+                            }
+                            else
+                            {
+                                listItem = new ListItem(content.Name,
+                                    _urlResolver.Service.GetUrl(content.ContentLink,
+                                        ContentLanguage.PreferredCulture.Name,
+                                        new UrlResolverArguments { ContextMode = ContextMode.Default }));
+                            }
+
+                            listItems.Add(url.ToString(), listItem);
                         }
                     }
 
@@ -111,14 +134,27 @@ namespace DoubleJay.Epi.EnhancedPropertyList.EditorDescriptors
                         continue;
                     }
 
-                    if (!urls.ContainsKey(contentLink.ID.ToString()))
+                    if (!listItems.ContainsKey(contentLink.ID.ToString()))
                     {
-                        urls.Add(contentLink.ID.ToString(), _urlResolver.Service.GetUrl(contentLink));
+                        ListItem listItem;
+
+                        if (!_contentLoader.Service.TryGet<IContent>(contentLink, out var content))
+                        {
+                            listItem = new ListItem(contentLink.ID.ToString(), contentLink.ID.ToString());
+                        }
+                        else
+                        {
+                            listItem = new ListItem(content.Name,
+                                _urlResolver.Service.GetUrl(content.ContentLink, ContentLanguage.PreferredCulture.Name,
+                                    new UrlResolverArguments { ContextMode = ContextMode.Default }));
+                        };
+
+                        listItems.Add(contentLink.ID.ToString(), listItem);
                     }
                 }
             }
 
-            return urls;
+            return listItems;
         }
 
         /// <summary>
@@ -136,10 +172,10 @@ namespace DoubleJay.Epi.EnhancedPropertyList.EditorDescriptors
         }
 
         /// <summary>
-        /// 
+        /// Indicates whether a property is an image.
         /// </summary>
         /// <param name="propertyInfo">The property info.</param>
-        /// <returns></returns>
+        /// <returns><c>true</c> if it's an image, otherwise <c>false</c></returns>
         protected virtual bool IsImage(PropertyInfo propertyInfo)
         {
             var uiHintAttribute =
@@ -180,6 +216,29 @@ namespace DoubleJay.Epi.EnhancedPropertyList.EditorDescriptors
             public string Name { get; set; }
 
             public bool IsImage { get; set; }
+        }
+
+
+        /// <summary>
+        /// Represents an item in the PropertyList.
+        /// </summary>
+        protected class ListItem
+        {
+            public ListItem(string name, string url)
+            {
+                Name = name;
+                Url = url;
+            }
+
+            public ListItem(string url)
+            {
+                Name = string.Empty;
+                Url = url;
+            }
+
+            public string Name { get; set; }
+
+            public string Url { get; set; }
         }
     }
 }

@@ -18,7 +18,7 @@ function (
         _getGridDefinition: function () {
             var result = this.inherited(arguments);
 
-            enhancedFormatters.setUrlMappings(this.urlMappings);
+            enhancedFormatters.setItemMappings(this.itemMappings);
 
             for (var i = 0; i < this.fields.length; i++) {
                 if (this.fields[i].isImage) {
@@ -34,7 +34,7 @@ function (
         onExecuteDialog: function () {
             var item = this._itemEditor.get("value");
 
-            var contentUrls = [];
+            var items = [];
 
             for (var i = 0; i < this.fields.length; i++) {
                 var value = item[this.fields[i].name];
@@ -44,13 +44,13 @@ function (
                 }
 
                 if (isNaN(value)) {
-                    contentUrls.push(enhancedFormatters.getContentUrlByPermanentLink(value));
+                    items.push(enhancedFormatters.getItemByPermanentLink(value));
                 } else {
-                    contentUrls.push(enhancedFormatters.getContentUrlByContentLink(value));
+                    items.push(enhancedFormatters.getItemByContentLink(value));
                 }
             }
 
-            var dl = new DeferredList(contentUrls);
+            var dl = new DeferredList(items);
 
             dl.then(lang.hitch(this, function () {
                 if (this._editingItemIndex !== undefined) {
