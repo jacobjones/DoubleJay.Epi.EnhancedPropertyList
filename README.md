@@ -1,32 +1,35 @@
-# Configurable Color Picker for Episerver
+# Enhanced PropertyList for Episerver
 
-![Configurable Color Picker](https://raw.githubusercontent.com/jacobjones/DoubleJay.Epi.ConfigurableColorPicker/master/images/configurable-color-picker.png)
+**After**: 
+![Enhanced PropertyList](https://raw.githubusercontent.com/jacobjones/DoubleJay.Epi.EnhancedPropertyList/master/images/enhanced-propertylist-episerver.png)
+
+**Before**:
+![Standard PropertyList](https://raw.githubusercontent.com/jacobjones/DoubleJay.Epi.EnhancedPropertyList/master/images/standard-propertylist-original-episerver.png)
 
 ## Description
-This package provides an easy-to-use color picker for Episerver—which allows full configurability of the color palette.
+Improves the presentation of ContentReference and Url properties in a [Generic PropertyList](https://world.episerver.com/documentation/developer-guides/CMS/Content/Properties/generic-propertylist/) by showing the content name or a preview if it's an image.
 
 ## Features
-* Available colors are fully configurable
-* Colors can be swapped-out as the ID is persisted (not the color code)
-* Support for different color palettes per site in a multi-site solution
-* Allows for individual properties to use a specified palette
+* ContentReference and Url properties are automatically detected
+* Images are identified by the `UIHint` attribute with no additional configuration required
 
 ## Getting started
 ### Installation
 * The NuGet package can be installed from the [Episerver NuGet feed](https://nuget.episerver.com/feed/)
-* See the installation details here: https://nuget.episerver.com/package/?id=DoubleJay.Epi.ConfigurableColorPicker
+* See the installation details here: https://nuget.episerver.com/package/?id=DoubleJay.Epi.EnhancedPropertyList
 
-### Configuration & Usage
-**Version 2** added the ability to name palettes and use these throughout the website, as such, configuration and usage changed significantly. Breaking changes are listed in the [documentation](https://github.com/jacobjones/DoubleJay.Epi.ConfigurableColorPicker/wiki).
+### Usage
+Usage is as simple as using the `EnhancedCollectionEditorDescriptor` (`DoubleJay.Epi.EnhancedPropertyList.EditorDescriptors`) opposed to the default `CollectionEditorDescriptor`.
 
-Please consult with the relevant documentation for further details:
+Your property should look like this:
 
-* [Version 2](https://github.com/jacobjones/DoubleJay.Epi.ConfigurableColorPicker/wiki/Usage-%28Version-2%29)
-* [Version 1](https://github.com/jacobjones/DoubleJay.Epi.ConfigurableColorPicker/wiki/Usage-%28Version-1%29)
+```cs
+[EditorDescriptor(EditorDescriptorType = typeof(EnhancedCollectionEditorDescriptor<Item>))]
+public virtual IList<Item> Items { get; set; }
+```
 
 ### Further Information
+Based on two blog posts (one of which was my own!):
 
-Creating this was the subject of two blog posts you can checkout here:
-
-* https://jakejon.es/blog/making-a-configurable-color-picker-for-episerver-part-1
-* https://jakejon.es/blog/making-a-configurable-color-picker-for-episerver-part-2
+* https://jakejon.es/blog/showing-the-friendly-url-of-a-content-reference-or-url-property-in-a-propertylist
+* https://gregwiechec.com/2015/12/propertylist-with-images/
