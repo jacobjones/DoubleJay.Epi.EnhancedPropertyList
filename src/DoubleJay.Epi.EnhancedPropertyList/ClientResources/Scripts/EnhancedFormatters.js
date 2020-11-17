@@ -58,7 +58,7 @@ function (
                 return value;
             }
 
-            return "<img style='max-height: 100px;' src='" + item.url + "'/>";
+            return "<img style='max-height: 100px; max-width: 100%;' src='" + item.url + "'/>";
         },
 
         getItemByPermanentLink: function (link) {
