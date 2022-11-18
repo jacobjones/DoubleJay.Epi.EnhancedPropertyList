@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using EPiServer;
 using EPiServer.Cms.Shell.UI.ObjectEditing.EditorDescriptors;
@@ -21,8 +18,8 @@ namespace DoubleJay.Epi.EnhancedPropertyList.EditorDescriptors
     /// <typeparam name="T">The item type</typeparam>
     public class EnhancedCollectionEditorDescriptor<T> : CollectionEditorDescriptor<T> where T : new()
     {
-        private readonly Injected<IUrlResolver> _urlResolver = default(Injected<IUrlResolver>);
-        private readonly Injected<IContentLoader> _contentLoader = default(Injected<IContentLoader>);
+        private readonly Injected<IUrlResolver> _urlResolver;
+        private readonly Injected<IContentLoader> _contentLoader;
 
         private static readonly ILogger Logger = LogManager.GetLogger(typeof(EnhancedCollectionEditorDescriptor<T>));
 
@@ -43,11 +40,11 @@ namespace DoubleJay.Epi.EnhancedPropertyList.EditorDescriptors
         /// <returns>Field info.</returns>
         protected virtual IEnumerable<FieldInfo> GetFieldInfo(ExtendedMetadata metadata)
         {
-            Type itemType = null;
+            Type? itemType = null;
 
             try
             {
-                itemType = metadata.ContainerType?.GenericTypeArguments[0];
+                itemType = metadata.ModelType?.GenericTypeArguments[0];
             }
             catch (Exception ex)
             {
@@ -105,7 +102,7 @@ namespace DoubleJay.Epi.EnhancedPropertyList.EditorDescriptors
 
                     if (url != null && !url.IsEmpty())
                     {
-                        if (!listItems.ContainsKey(url.ToString()))
+                        if (!listItems.ContainsKey(url!.ToString()))
                         {
                             var content = _urlResolver.Service.Route(new UrlBuilder(url), ContextMode.Default);
 
@@ -165,7 +162,7 @@ namespace DoubleJay.Epi.EnhancedPropertyList.EditorDescriptors
         {
             if (!string.IsNullOrEmpty(str) && str.Length > 1)
             {
-                return char.ToLowerInvariant(str[0]) + str.Substring(1);
+                return char.ToLowerInvariant(str[0]) + str[1..];
             }
 
             return str;
@@ -192,14 +189,14 @@ namespace DoubleJay.Epi.EnhancedPropertyList.EditorDescriptors
         /// <param name="propertyInfo">The property info.</param>
         /// <param name="item">The parent object.</param>
         /// <returns>The property value.</returns>
-        protected virtual TProperty GetPropertyValue<TProperty>(PropertyInfo propertyInfo, dynamic item)
+        protected virtual TProperty? GetPropertyValue<TProperty>(PropertyInfo propertyInfo, dynamic item)
         {
             if (typeof(TProperty).IsAssignableFrom(propertyInfo.PropertyType))
             {
                 return (TProperty)propertyInfo.GetValue(item, null);
             }
 
-            return default(TProperty);
+            return default;
         }
 
         /// <summary>

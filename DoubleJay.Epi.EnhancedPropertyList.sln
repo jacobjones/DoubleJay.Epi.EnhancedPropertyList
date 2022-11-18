@@ -1,9 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.1259
-MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DoubleJay.Epi.EnhancedPropertyList", "src\DoubleJay.Epi.EnhancedPropertyList\DoubleJay.Epi.EnhancedPropertyList.csproj", "{023A31A6-4636-4066-8AF2-F18F62BBD30C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DoubleJay.Epi.EnhancedPropertyList", "src\DoubleJay.Epi.EnhancedPropertyList\DoubleJay.Epi.EnhancedPropertyList.csproj", "{DA1526C5-79B1-4C6F-BF93-33E967A18041}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +8,9 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{023A31A6-4636-4066-8AF2-F18F62BBD30C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{023A31A6-4636-4066-8AF2-F18F62BBD30C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{023A31A6-4636-4066-8AF2-F18F62BBD30C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{023A31A6-4636-4066-8AF2-F18F62BBD30C}.Release|Any CPU.Build.0 = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {6C0CE09A-E9B4-4BC8-9A9F-82CDEC4DF872}
+		{DA1526C5-79B1-4C6F-BF93-33E967A18041}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA1526C5-79B1-4C6F-BF93-33E967A18041}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA1526C5-79B1-4C6F-BF93-33E967A18041}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA1526C5-79B1-4C6F-BF93-33E967A18041}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

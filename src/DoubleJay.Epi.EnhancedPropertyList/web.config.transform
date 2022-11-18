@@ -1,8 +1,0 @@
-﻿<?xml version="1.0"?>
-<configuration>
-  <episerver.shell>
-    <protectedModules>
-      <add name="DoubleJay.Epi.EnhancedPropertyList" />
-    </protectedModules>
-  </episerver.shell>
-</configuration>

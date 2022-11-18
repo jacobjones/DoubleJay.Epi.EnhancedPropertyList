@@ -1,4 +1,4 @@
-﻿.\Package-Resources.ps1
+﻿mkdir -p .\.nuget -ea 0
 
-.nuget\nuget restore
-.nuget\nuget pack src\DoubleJay.Epi.EnhancedPropertyList\DoubleJay.Epi.EnhancedPropertyList.csproj -Build -Properties Configuration=Release
+dotnet build -c Release
+dotnet pack -c Release -o .\.nuget --no-build
