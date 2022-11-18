@@ -1,13 +1,13 @@
-# Enhanced PropertyList for Episerver
+# Enhanced PropertyList for Optimizely CMS
 
 **After**: 
-![Enhanced PropertyList](https://raw.githubusercontent.com/jacobjones/DoubleJay.Epi.EnhancedPropertyList/master/images/enhanced-propertylist-episerver.png)
+![Enhanced PropertyList](https://raw.githubusercontent.com/jacobjones/DoubleJay.Epi.EnhancedPropertyList/master/images/enhanced-propertylist-optimizely-cms.png)
 
 **Before**:
-![Standard PropertyList](https://raw.githubusercontent.com/jacobjones/DoubleJay.Epi.EnhancedPropertyList/master/images/standard-propertylist-original-episerver.png)
+![Standard PropertyList](https://raw.githubusercontent.com/jacobjones/DoubleJay.Epi.EnhancedPropertyList/master/images/standard-propertylist-original-optimizely-cms.png)
 
 ## Description
-Improves the presentation of ContentReference and Url properties in a [Generic PropertyList](https://world.episerver.com/documentation/developer-guides/CMS/Content/Properties/generic-propertylist/) by showing the content name or a preview if it's an image.
+Improves the presentation of ContentReference and Url properties in a [Generic PropertyList](https://docs.developers.optimizely.com/content-cloud/v12.0.0-content-cloud/docs/generic-propertylist) by showing the content name or a preview if it's an image.
 
 ## Features
 * ContentReference and Url properties are automatically detected
@@ -15,11 +15,20 @@ Improves the presentation of ContentReference and Url properties in a [Generic P
 
 ## Getting started
 ### Installation
-* The NuGet package can be installed from the [Episerver NuGet feed](https://nuget.episerver.com/feed/)
-* See the installation details here: https://nuget.episerver.com/package/?id=DoubleJay.Epi.EnhancedPropertyList
+* The NuGet package can be installed from the [Optimizely NuGet feed] (https://nuget.optimizely.com/)
+* See the installation details here: https://nuget.optimizely.com/package/?id=DoubleJay.Epi.EnhancedPropertyList
 
 ### Usage
-Usage is as simple as using the `EnhancedCollectionEditorDescriptor` (`DoubleJay.Epi.EnhancedPropertyList.EditorDescriptors`) opposed to the default `CollectionEditorDescriptor`.
+In CMS 12, to register you should call the `AddEnhancedPropertyList` method in your startup class `ConfigureServices` method::
+
+```cs
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddEnhancedPropertyList();
+}
+```
+
+Usage is then as simple as using the `EnhancedCollectionEditorDescriptor` (`DoubleJay.Epi.EnhancedPropertyList.EditorDescriptors`) opposed to the default `CollectionEditorDescriptor`.
 
 Your property should look like this:
 
